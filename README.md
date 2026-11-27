@@ -12,14 +12,23 @@ Muitos jovens terminam a escola sem conhecimentos práticos essenciais para o di
 ✨ Funcionalidades Principais
 
 • 🧭 Trilhas de Missões: Jornadas guiadas por momentos reais da vida, como Primeiro Emprego, Vou Morar Sozinho e Me Enrolei no Cartão.
+
 • 🧪 Laboratório da Vida Real (Simuladores): Ferramentas práticas para testar situações antes de encarar o mundo real:
-	• Holerite Interativo: Entenda para onde vai cada desconto do seu salário.
-	• Juros do Cartão: Compare parcelamento, pagamento mínimo e o efeito bola de neve.
-	• Imposto de Renda: Quiz guiado para saber quando e como declarar.
-	• Contrato de Aluguel: Modo detetive para identificar cláusulas que merecem atenção.
-	• Gerador de Currículo: Crie um currículo limpo e otimizado para sistemas de recrutamento (ATS).
+
+• Holerite Interativo: Entenda para onde vai cada desconto do seu salário.
+
+• Juros do Cartão: Compare parcelamento, pagamento mínimo e o efeito bola de neve.
+
+• Imposto de Renda: Quiz guiado para saber quando e como declarar.
+
+• Contrato de Aluguel: Modo detetive para identificar cláusulas que merecem atenção.
+
+• Gerador de Currículo: Crie um currículo limpo e otimizado para sistemas de recrutamento (ATS).
+
 • 🎮 Mini Games (Treino Rápido): Desafios curtos para fixar conceitos e ganhar XP, como Verdade ou Cilada?, Detetive do Holerite e Orçamento Relâmpago.
+
 • 📖 Guias de Bolso: Leituras rápidas de 1 minuto direto ao ponto sobre temas urgentes (como abrir conta sem cair em taxas, limpar o nome no SPC ou pedir demissão).
+
 • 🐾 Mascote Guia (Frederico): Um assistente interativo que acompanha e orienta o usuário em toda a jornada de aprendizado.
 
 🌍 Impacto Social (ODS 4 — ONU)
