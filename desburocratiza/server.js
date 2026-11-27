@@ -9,7 +9,9 @@ const path = require("path");
 const fs = require("fs");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
+const { GoogleGenAI } = require("@google/genai");
 const db = require("./src/db");
+const ai = new GoogleGenAI({});
 
 const app = express();
 const PORT = Number(process.env.PORT || 3000);
@@ -217,34 +219,21 @@ const upload = multer({
     cb(null, allowed.includes(file.mimetype));
   }
 });
-app.post("/api/avatar", requireAuth, upload.single("avatar"), (req, res) => {
-  if (!req.file) return res.status(400).json({ error: "Envie uma imagem JPG, PNG ou WEBP de até 8 MB." });
-  db.prepare("UPDATE users SET avatar=? WHERE id=?").run(req.file.filename, req.session.userId);
-  res.json({ avatar: `/uploads/${req.file.filename}` });
-});
-app.use("/uploads", express.static(uploadDir, { dotfiles: "deny", index: false, maxAge: "1h" }));
-
 app.post("/api/chat", requireAuth, async (req, res) => {
   const message = cleanText(req.body.message, 1800);
   if (!message) return res.status(400).json({ error: "Escreva uma dúvida para o Frederico." });
-  if (!process.env.OPENAI_API_KEY) return res.status(503).json({ error: "O Frederico ainda não foi conectado à API. Configure OPENAI_API_KEY no arquivo .env do servidor." });
+  if (!process.env.GEMINI_API_KEY) return res.status(503).json({ error: "O Frederico ainda não foi conectado à API. Configure GEMINI_API_KEY no arquivo .env do servidor." });
   try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: { "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: process.env.OPENAI_MODEL || "gpt-4.1-mini",
-        messages: [
-          { role: "system", content: "Você é Frederico, um gato professor simpático do projeto Desburocratiza. Explique burocracia brasileira em português simples, com exemplos práticos e sem juridiquês. Seja acolhedor e objetivo. Não invente leis, alíquotas ou prazos; quando algo depender da situação ou mudar com o tempo, avise e indique consultar fonte oficial. Você oferece educação geral, não aconselhamento jurídico, contábil ou financeiro individual. Nunca peça senhas, códigos, documentos completos ou dados bancários." },
-          { role: "user", content: message }
-        ],
+    const response = await ai.models.generateContent({
+      model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
+      contents: message,
+      config: {
+        systemInstruction: "Você é Frederico, um gato professor simpático do projeto Desburocratiza. Explique burocracia brasileira em português simples, com exemplos práticos e sem juridiquês. Seja acolhedor e objetivo. Não invente leis, alíquotas ou prazos; quando algo depender da situação ou mudar com o tempo, avise e indique consultar fonte oficial. Você oferece educação geral, não aconselhamento jurídico, contábil ou financeiro individual. Nunca peça senhas, códigos, documentos completos ou dados bancários.",
         temperature: 0.5,
-        max_tokens: 550
-      })
+        maxOutputTokens: 550
+      }
     });
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error?.message || "Erro na API de IA.");
-    res.json({ reply: data.choices?.[0]?.message?.content || "Miau! Não consegui formular uma resposta agora." });
+    res.json({ reply: response.text || "Miau! Não consegui formular uma resposta agora." });
   } catch (err) {
     console.error("Chat:", err.message);
     res.status(502).json({ error: "O Frederico teve um pequeno novelo técnico. Tente novamente em instantes." });
